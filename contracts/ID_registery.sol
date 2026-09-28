@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.34;
+
 /**
  * @title ID_registery
  * @dev Manages user ids, registration and active statuses.
@@ -32,7 +35,7 @@ contract ID_registery {
             addr: msg.sender,
             email: _email,
             registeredAt: block.timestamp,
-            exists: true
+            active: true
         });
 
         emit user_registered(msg.sender, _name, block.timestamp);
@@ -50,9 +53,12 @@ contract ID_registery {
     /**
      * @dev Retrieve user profile.
      * @param _userAddress The user's address.
-     * @return string The user's profile.
+     * @return name The user's name
+     * @return id The user's ID
+     * @return email The user's email
+     * @return registeredAt The registration timestamp
      */
-    function getUser(address _userAddress) public view returns (string memory name, uint256 registeredAt) {
+    function getUser(address _userAddress) public view returns (string memory name,  int id, string memory email, uint256 registeredAt) {
         require(users[_userAddress].active, "User does not exist");
         User memory user = users[_userAddress];
         return (user.name, user.id, user.email, user.registeredAt);

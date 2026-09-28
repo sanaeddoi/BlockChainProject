@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.34;
+
 /**
  * @title Device manager
  * @dev Manages device registration and active statuses.
@@ -19,7 +22,7 @@ contract Device_manager{
 
     /**
      * @dev Registers new device for the caller.
-     * @param _deviceAddr The address of the device being registered
+     * @param deviceAddr The address of the device being registered
      * @param deviceName The name of the device being registered
      * @param _id The id of the device being registered
      * @param _devType  The type of the device being registered
@@ -56,7 +59,11 @@ contract Device_manager{
      * @dev Retrieve device.
      * @param user The owner of the device
      * @param deviceAddr The address of the device to return
-     * @return string The device.
+     * @return id The device ID
+     * @return name The device name
+     * @return devType The type of device
+     * @return location The device location
+     * @return active Whether the device is active
      */
     function getDevice(address user, address deviceAddr) public view returns (int id, string memory name, string memory devType, string memory location, bool active){
         require(device[user][deviceAddr].active, "Device does not exist");

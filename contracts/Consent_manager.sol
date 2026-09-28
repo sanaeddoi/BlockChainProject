@@ -1,3 +1,6 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.34;
+
 /**
  * @title Consent_manager
  * @dev Manages granting/revoking consent and consent active statuses
@@ -32,7 +35,7 @@ contract Consent_manager{
 
     /**
      * @dev Revokes consent from a delegate
-     * @param delagate The address of the delegate who's consent is being revoked
+     * @param delegate The address of the delegate who's consent is being revoked
      */
     function revoke(address delegate) public{
         require(consent[msg.sender][delegate], "Consent is not active");
@@ -47,7 +50,11 @@ contract Consent_manager{
      * @param delegate The requestor being checked
      * @return bool True if consent is granted and active, false otherwise
      */
-    function hasConsent(address user, address delegate) public{
-        return consent[user][delegate];
-    }
+    function hasConsent(address user, address delegate) 
+        public
+        view
+        returns (bool)
+            {
+                return consent[user][delegate];
+            }    
 }
