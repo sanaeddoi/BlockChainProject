@@ -2,8 +2,8 @@
 pragma solidity ^0.8.34;
 
 import "forge-std/Test.sol";
-import "../ID_registery.sol";
-import "../Consent_manager.sol";
+import "../contracts/ID_registery.sol";
+import "../contracts/Consent_manager.sol";
 
 contract IntegrationTest is Test {
     ID_registery registry;
@@ -35,7 +35,7 @@ contract IntegrationTest is Test {
 
         // 2. Grant consent to the delegate
         vm.prank(user);
-        consentManager.grant(delegate);
+        consentManager.grant(delegate, 7);
 
         // Check that consent is active
         assertEq(

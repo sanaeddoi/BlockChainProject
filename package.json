@@ -8,6 +8,7 @@
     "@types/node": "^22.20.4",
     "forge-std": "github:foundry-rs/forge-std#v1.16.2",
     "hardhat": "^3.18.0",
+    "hardhat-gas-reporter": "^2.3.0",
     "typescript": "~6.0.3",
     "viem": "^2.56.9"
   }

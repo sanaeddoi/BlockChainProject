@@ -2,7 +2,7 @@
 pragma solidity ^0.8.34;
 
 import "forge-std/Test.sol";
-import "../Device_manager.sol";
+import "../contracts/Device_manager.sol";
 
 contract Device_managerTest is Test {
     Device_manager deviceManager;

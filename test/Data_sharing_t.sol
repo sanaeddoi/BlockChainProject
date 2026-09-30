@@ -2,10 +2,10 @@
 pragma solidity ^0.8.34;
 
 import "forge-std/Test.sol";
-import "./ID_registery.sol";
-import "./Device_manager.sol";
-import "./Consent_manager.sol";
-import "./Data_sharing.sol";
+import "../contracts/ID_registery.sol";
+import "../contracts/Device_manager.sol";
+import "../contracts/Consent_manager.sol";
+import "../contracts/Data_sharing.sol";
 
 contract Data_sharingTest is Test {
     ID_registery registry;
@@ -42,7 +42,7 @@ contract Data_sharingTest is Test {
 
     function test_GrantsAccessWhenConsentExists() public {
         vm.prank(owner);
-        consentManager.grant(requester);
+        consentManager.grant(requester, 7);
 
         vm.prank(requester);
         bool granted = dataSharing.requestAccess(owner, device);
@@ -51,7 +51,7 @@ contract Data_sharingTest is Test {
 
     function test_DeniesAccessAfterRevoke() public {
         vm.prank(owner);
-        consentManager.grant(requester);
+        consentManager.grant(requester, 7);
 
         vm.prank(owner);
         consentManager.revoke(requester);
@@ -66,7 +66,7 @@ contract Data_sharingTest is Test {
         dataSharing.requestAccess(owner, device); // denied, no consent yet
 
         vm.prank(owner);
-        consentManager.grant(requester);
+        consentManager.grant(requester, 7);
 
         vm.prank(requester);
         dataSharing.requestAccess(owner, device); // granted
@@ -85,7 +85,7 @@ contract Data_sharingTest is Test {
 
     function test_ReadDataReturnsDeviceInfoWithConsent() public {
         vm.prank(owner);
-        consentManager.grant(requester);
+        consentManager.grant(requester, 7);
 
         vm.prank(requester);
         (string memory name, string memory devType, string memory location) =
