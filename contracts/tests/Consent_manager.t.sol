@@ -2,7 +2,7 @@
 pragma solidity ^0.8.28;
 
 import "forge-std/Test.sol";
-import "./Consent_manager.sol";
+import "../Consent_manager.sol";
 
 contract Consent_managerTest is Test {
 

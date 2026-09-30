@@ -2,8 +2,8 @@
 pragma solidity ^0.8.34;
 
 import "forge-std/Test.sol";
-import "../contracts/ID_registery.sol";
-import "../contracts/Consent_manager.sol";
+import "../ID_registery.sol";
+import "../Consent_manager.sol";
 
 contract IntegrationTest is Test {
     ID_registery registry;
