@@ -21,6 +21,9 @@ describe("Data_sharing", async function () {
   const device = getAddress("0x0000000000000000000000000000000000009abc");
   const unknownDevice = getAddress("0x000000000000000000000000000000000000dead");
 
+  const CONSENT_DAYS = 30n;
+  const CONSENT_SECONDS = Number(CONSENT_DAYS) * 24 * 60 * 60;
+
   // Deploys all four contracts, then registers the owner and one device.
   async function deployDataSharing() {
     const registry = await viem.deployContract("ID_registery");
@@ -43,10 +46,11 @@ describe("Data_sharing", async function () {
     return { registry, deviceManager, consentManager, dataSharing };
   }
 
-  // Same as deployDataSharing, with the owner's consent granted to the requester.
+  // Same as deployDataSharing, with the owner's consent granted to the
+  // requester for CONSENT_DAYS.
   async function deployWithConsent() {
     const contracts = await deployDataSharing();
-    await contracts.consentManager.write.grant([requester], {
+    await contracts.consentManager.write.grant([requester, CONSENT_DAYS], {
       account: ownerClient.account,
     });
     return contracts;
@@ -139,6 +143,26 @@ describe("Data_sharing", async function () {
       );
     });
 
+    it("Should grant access until consent expires, then deny it", async function () {
+      const { dataSharing } = await networkHelpers.loadFixture(deployWithConsent);
+
+      // one second before the expiry the grant set, access is still allowed
+      await networkHelpers.time.increase(CONSENT_SECONDS - 1);
+      assert.equal(await dataSharing.read.verifyConsent([owner, requester]), true);
+
+      await networkHelpers.time.increase(2);
+      assert.equal(await dataSharing.read.verifyConsent([owner, requester]), false);
+
+      await viem.assertions.emitWithArgs(
+        dataSharing.write.requestAccess([owner, device], {
+          account: requesterClient.account,
+        }),
+        dataSharing,
+        "AccessAttempt",
+        [requester, device, false],
+      );
+    });
+
     it("Should deny access after consent is revoked", async function () {
       const { consentManager, dataSharing } =
         await networkHelpers.loadFixture(deployWithConsent);
@@ -191,7 +215,7 @@ describe("Data_sharing", async function () {
         [device, "Camera", 2n, "camera", "Porch"],
         { account: strangerClient.account },
       );
-      await consentManager.write.grant([requester], {
+      await consentManager.write.grant([requester, CONSENT_DAYS], {
         account: strangerClient.account,
       });
 
@@ -220,6 +244,18 @@ describe("Data_sharing", async function () {
 
     it("Should revert without consent", async function () {
       const { dataSharing } = await networkHelpers.loadFixture(deployDataSharing);
+
+      await viem.assertions.revertWith(
+        dataSharing.read.readData([owner, device], {
+          account: requesterClient.account,
+        }),
+        "No consent for this owner",
+      );
+    });
+
+    it("Should revert once consent has expired", async function () {
+      const { dataSharing } = await networkHelpers.loadFixture(deployWithConsent);
+      await networkHelpers.time.increase(CONSENT_SECONDS + 1);
 
       await viem.assertions.revertWith(
         dataSharing.read.readData([owner, device], {
@@ -294,7 +330,7 @@ describe("Data_sharing", async function () {
       });
       const deniedAt = await networkHelpers.time.latest();
 
-      await consentManager.write.grant([requester], {
+      await consentManager.write.grant([requester, CONSENT_DAYS], {
         account: ownerClient.account,
       });
       await dataSharing.write.requestAccess([owner, device], {

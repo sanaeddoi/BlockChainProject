@@ -75,8 +75,10 @@ async function requestAndRead(step: string) {
 
 await requestAndRead("1. Requester asks before consent is granted");
 
-await consentManager.write.grant([requester], { account: ownerClient.account });
-await requestAndRead("2. Owner grants consent, requester asks again");
+await consentManager.write.grant([requester, 30n], {
+  account: ownerClient.account,
+});
+await requestAndRead("2. Owner grants consent for 30 days, requester asks again");
 console.log(
   "  readData:",
   await dataSharing.read.readData([owner, device], {
