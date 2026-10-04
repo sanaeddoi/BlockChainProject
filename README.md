@@ -31,7 +31,7 @@ npx hardhat node
 
 **Terminal 2: deploy the contracts to it**
 ```bash
-npx hardhat run scripts/YOUR-DEPLOY-SCRIPT.ts --network localhost
+npx hardhat run scripts/deploy.ts --network localhost
 ```
 The node prints a contract address for each deployment. Copy the four addresses
 (ID_registery, Device_manager, Consent_manager, Data_sharing) into `frontend/config.js`.
