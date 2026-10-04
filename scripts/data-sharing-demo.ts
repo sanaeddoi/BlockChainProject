@@ -17,7 +17,7 @@ const owner = ownerClient.account.address;
 const requester = requesterClient.account.address;
 const device = getAddress("0x0000000000000000000000000000000000009abc");
 
-//create temp dir and instatiate off-chain JSON store for testing
+//create temp dir and instantiate off-chain JSON store for testing
 const storeDir = await mkdtemp(path.join(tmpdir(), "offchain-store-"));
 const store = offchainStore(path.join(storeDir, "store.json"));
 
@@ -32,7 +32,7 @@ const dataSharing = await viem.deployContract("Data_sharing", [
   consentManager.address,
 ]);
 
-//register user (Alice) and her device (thermostat)
+//register user (Alice) and device (thermostat)
 console.log("Registering owner", owner, "and device", device);
 await registry.write.register_user(["Alice", 1n, "alice@example.com"], {
   account: ownerClient.account,
