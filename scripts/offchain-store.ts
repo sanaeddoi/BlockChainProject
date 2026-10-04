@@ -9,6 +9,7 @@ const execFileAsync = promisify(execFile);
 const PROJECT_ROOT = path.resolve(import.meta.dirname, "..");
 const PYTHON = process.env.PYTHON ?? "python3";
 
+//represents data returned from off-chain store
 export interface OffchainData {
   dataHash: Hex;
   // the exact canonical JSON that dataHash is the SHA-256 of
@@ -17,6 +18,7 @@ export interface OffchainData {
   storedAt: number;
 }
 
+//handles structured errors returned by Python off-chain CLI
 export class OffchainError extends Error {
   constructor(
     public readonly kind: string,
@@ -27,6 +29,10 @@ export class OffchainError extends Error {
   }
 }
 
+/**
+ * Internal helper to run Python off-chain CLI module and parse
+ * its JSON output. Captures and wraps and structured stderr errors.
+ */
 async function run<T>(storePath: string, args: string[]): Promise<T> {
   try {
     const { stdout } = await execFileAsync(

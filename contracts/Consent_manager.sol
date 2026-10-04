@@ -35,7 +35,6 @@ contract Consent_manager{
         uint256 expiry = block.timestamp + (durationInDays * 1 days);
 
         consent[msg.sender][delegate] = Consent({
-
             expiry: expiry,
             active: true
         });

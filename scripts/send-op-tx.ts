@@ -1,5 +1,6 @@
 import { network } from "hardhat";
 
+//initialize hardhat network configured for Optimism
 const { viem } = await network.create({
   network: "hardhatOp",
   chainType: "op",
@@ -7,11 +8,13 @@ const { viem } = await network.create({
 
 console.log("Sending transaction using the OP chain type");
 
+//get public client for reading block/chain data and primary wallet client as sender
 const publicClient = await viem.getPublicClient();
 const [senderClient] = await viem.getWalletClients();
 
 console.log("Sending 1 wei from", senderClient.account.address, "to itself");
 
+//estimate L1 data fee
 const l1Gas = await publicClient.estimateL1Gas({
   account: senderClient.account.address,
   to: senderClient.account.address,

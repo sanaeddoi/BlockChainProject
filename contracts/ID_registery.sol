@@ -23,7 +23,9 @@ contract ID_registery {
 
     /**
      * @dev Registers new user profile for the caller.
-     * @param _name, _id, _email
+     * @param _name Name of the registering user
+     * @param _id Id of the registering user
+     * @param _email Email of the registering user
      */
     function register_user(string memory _name, int _id, string memory _email) public{
         require(!users[msg.sender].active, "User is already registered");

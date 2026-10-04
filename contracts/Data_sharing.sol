@@ -48,7 +48,7 @@ contract Data_sharing {
 
     /**
      * @dev Checks whether msg.sender currently holds consent from `owner`.
-     * NOTE: this checks consent at the owner level only — Consent_manager
+     * NOTE: this checks consent at the owner level only. Consent_manager
      * does not currently scope consent to a specific device.
      */
     function verifyConsent(address owner, address delegate) public view returns (bool) {
@@ -58,7 +58,7 @@ contract Data_sharing {
     /**
      * @dev Entry point a requester calls to try accessing one of an owner's
      * devices. Checks that the owner is registered, the device is active,
-     * and consent exists — logs the attempt either way.
+     * and consent exists and logs the attempt either way.
      */
     function requestAccess(address owner, address deviceAddr) external returns (bool granted) {
         bool ownerActive = registry.isActive(owner);
@@ -98,8 +98,10 @@ contract Data_sharing {
         return deviceLogs[deviceAddr];
     }
 
-    /// @dev Private so logs can only be written as the direct result of a
-    /// real access attempt through requestAccess.
+    /**
+    * @dev Private so logs can only be written as the direct result of a
+    * real access attempt through requestAccess.
+    */
     function _logAccess(address requester, address deviceAddr, bool granted) private {
         deviceLogs[deviceAddr].push(
             AccessLogEntry({
