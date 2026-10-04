@@ -10,10 +10,9 @@ import "./Consent_manager.sol";
  * @dev Checks consent before allowing access to a device's data, and keeps
  * an append-only log of every access attempt (granted or denied).
  *
- * NOTE: Consent_manager currently only tracks a global owner-to-delegate
- * boolean, with no per-device scoping and no duration/expiry. This contract
- * is written to work correctly against that as it stands today — see the
- * accompanying message for the gaps worth raising with the team.
+ * NOTE: Consent_manager tracks consent globally per owner/delegate pair,
+ * rather than per device. It records an expiry and hasConsent enforces it;
+ * this contract uses hasConsent for both access checks.
  */
 contract Data_sharing {
     struct AccessLogEntry {
@@ -74,10 +73,10 @@ contract Data_sharing {
      * @dev Returns basic device info if the caller currently holds valid
      * access. Reverts otherwise.
      *
-     * NOTE: Device_manager has no off-chain data reference (hash/pointer)
-     * field yet, so this currently returns the device's own on-chain
-     * attributes as a placeholder. Once a dataHash field is added to
-     * Device_manager, this should return that instead.
+    * NOTE: The simulated off-chain store is separate from these contracts.
+    * Device_manager has no dataHash/pointer field, so this returns on-chain
+    * device metadata rather than the off-chain reading. The demo coordinates
+    * requestAccess with the off-chain store outside this contract.
      */
     function readData(address owner, address deviceAddr)
         external
