@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>IoT Consent Platform</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/frontend/styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div>
+          <h1>IoT Consent</h1>
+        </div>
+      </div>
+      <div class="account-picker">
+        <label for="account">Acting as</label>
+        <select id="account"></select>
+      </div>
+      <div class="status"><span id="status-dot" class="dot"></span><span id="status-text">connecting...</span></div>
+    </div>
+  </header>
+
+  <main>
+    <section class="intro">
+      <div class="chips-wrap">
+        <span class="chips-label">Test accounts (click to copy)</span>
+        <div id="chips" class="chips"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><span class="step">1</span>
+        <div><h2>Identity and devices</h2>
+        <p class="hint">Register the account you picked above as a user, then register a device it owns.</p></div>
+      </div>
+      <div id="identity-fns"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><span class="step">2</span>
+        <div><h2>Consent</h2>
+        <p class="hint">You are the owner. Enter the requester you want to allow, or stop allowing.</p></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="delegate">Requester address</label><input id="delegate" placeholder="0x..."></div>
+        <div class="field"><label for="duration">Duration in days (used when granting)</label><input id="duration" type="number" min="1" max="365" value="30"></div>
+      </div>
+      <div class="btns">
+        <button id="grant">Grant consent</button>
+        <button id="revoke" class="danger">Revoke consent</button>
+        <button id="check" class="ghost">Check consent</button>
+      </div>
+      <div id="consent-out" class="out"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><span class="step">3</span>
+        <div><h2>Request access</h2>
+        <p class="hint">Switch "Acting as" to the requester first. Every attempt is logged, granted or denied.</p></div>
+      </div>
+      <div class="grid2">
+        <div class="field"><label for="ra-owner">Owner address</label><input id="ra-owner" placeholder="0x..."></div>
+        <div class="field"><label for="ra-device">Device address</label><input id="ra-device" placeholder="0x..."></div>
+      </div>
+      <div class="btns"><button id="request">Request access</button></div>
+      <div id="request-out" class="out"></div>
+    </section>
+
+    <section class="card">
+      <div class="card-head"><span class="step">4</span>
+        <div><h2>Audit log</h2>
+        <p class="hint">Every access attempt for a device.</p></div>
+      </div>
+      <div class="field"><label for="log-device">Device address</label><input id="log-device" placeholder="0x..."></div>
+      <div class="btns"><button id="load-logs">Load audit log</button></div>
+      <div id="log-out" class="out"></div>
+      <div id="log-table" class="table-wrap"></div>
+    </section>
+  </main>
+
+  <script type="module" src="/frontend/app.js"></script>
+</body>
+</html>
